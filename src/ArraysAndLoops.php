@@ -17,6 +17,11 @@ class ArraysAndLoops
      */
     public static function generateRandomArray(): array
     {
+        $array = [];
+        while (count($array) < 100) {
+            array_push($array, rand(1, 10));
+        }
+        return $array;
     }
 
     /**
@@ -26,16 +31,23 @@ class ArraysAndLoops
      */
     public static function countNumbers(array $array): array
     {
+        return array_count_values($array);
     }
 
     /**
      * You get an array containing users, you have to filter users according to the
      * given field name (see user class) and value. Value types must also be compatible.
      * For example, age 18 will return only users with age field to 18
-     * @param array<User> $users
+     * @param array<User> $users todos.map(t => t.name)  array_map($todos, function($t) { $t->getName() }) Todo[]
      */
     public static function filterUsers(array $users, string $attribute, $value): array
     {
+        return array_values(array_filter($users, function (User $user) use ($value, $attribute) {
+            if (!method_exists($user, $attribute)) {
+                return false;
+            }
+            return $user->$attribute() === $value;
+        }));
     }
 
     /**
@@ -45,5 +57,16 @@ class ArraysAndLoops
      */
     public static function transformUsers(array $users): array
     {
+        foreach ($users as $user) {
+            $user->setName(ucfirst($user->getName()));
+            $age = $user->getAge();
+            if ($age % 2) {
+                $age += 10;
+            } else {
+                $age = $age / 2 + 2;
+            }
+            $user->setAge($age);
+        }
+        return $users;
     }
 }
