@@ -3,6 +3,32 @@
  * Get the values from the GET parameters with filter_input function
  */
 
+$name = filter_input(INPUT_GET, 'name');
+$age = filter_input(INPUT_GET, 'age', FILTER_VALIDATE_INT);
+
+function cheking($name, $age) {
+    if ($name && $age) {
+        return "$name is $age years old";
+    } else {
+        return "No query parameters found";
+    }
+}
+function chekingParameter($name, $age) {
+
+    if (!$name && !$age) {
+        echo "<ul>";
+        echo "<li>Missing name</li>";
+        echo "<li>Missing age</li>";
+    }elseif (!$name) {
+        echo "<ul>";
+        echo "<li>Missing name</li>";
+    }elseif (!$age) {
+        echo "<ul>";
+        echo "<li>Missing age</li>";
+    }
+    echo "</ul>";
+}
+
 ?>
 
 <!doctype html>
@@ -17,6 +43,8 @@
 <body>
 
 <!-- Display parameters here in a h1 tag -->
+<h1><?= cheking($name, $age) ?></h1>
+<p><?= chekingParameter($name, $age) ?></p>
 
 <!-- Display message in list element in case of missing parameters -->
 
