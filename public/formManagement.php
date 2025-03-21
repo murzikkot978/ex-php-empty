@@ -9,6 +9,31 @@
  * The data submitted should remain displayed in the form after the submission.
  * (Your form should be semantically correct, use a label and name your fields)
  */
+$name = $_POST['name'];
+$age = $_POST['age'];
+
+function verification($name, $age)
+{
+    if ($name && $age) {
+        if (mb_strlen($name) > 6) {
+            return "<span style='color: red'>$name</span> is $age years old";
+        } else {
+            return "$name is $age years old";
+        }
+    } else {
+        return "Submit the form";
+    }
+}
+
+function submitAge($age)
+{
+    if ($age > 18) {
+        for ($i = 1; $i <= $age; $i++) {
+            $a .= "<li>$i</li>";
+        }
+        return $a;
+    }
+}
 
 ?>
 
@@ -22,7 +47,15 @@
     <title>Form management</title>
 </head>
 <body>
-
+<form method="post" action=<?php echo $_SERVER['PHP_SELF']; ?>>
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" value="<?= $name ?>">
+    <label for="age">Age</label>
+    <input type="number" name="age" id="age" value="<?= $age ?>">
+    <button type="submit">submit</button>
+</form>
+<h1><?= verification($name, $age) ?></h1>
+<ul><?= submitAge($age) ?></ul>
 <!-- WRITE YOUR HTML AND PHP TEMPLATING HERE -->
 </body>
 </html>
