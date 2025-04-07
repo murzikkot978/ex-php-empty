@@ -8,6 +8,27 @@
  * If the deletion is successful, redirect the user to the list of todos.
  */
 
+$errors = [];
+$idForDelete = filter_input(INPUT_POST, 'idForDelete', FILTER_SANITIZE_NUMBER_INT);
+
+if (count($errors) === 0) {
+    $dsn = 'sqlite:../database.db';
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
+
+    try {
+        $pdo = new PDO($dsn, null, null, $options);
+        $stmt = $pdo->prepare('DELETE FROM todos WHERE id = :id');
+        $stmt->execute(['id' => $idForDelete]);
+        header('Location: displayAllTodosFromDatabase.php');
+    } catch (Exception $e) {
+        array_push($errors, $e->getMessage());
+    }
+}
+
 ?>
 
 
@@ -25,6 +46,14 @@
 <h1>Delete a todo error</h1>
 
 <!-- WRITE YOUR HTML AND PHP TEMPLATING HERE -->
+
+<?php if (count($errors) > 0): ?>
+    <ul>
+        <?php foreach ($errors as $error): ?>
+            <li><?= $error ?></li>
+        <?php endforeach ?>
+    </ul>
+<?php endif ?>
 
 <a href="displayAllTodosFromDatabase.php">Return to todo list</a>
 
